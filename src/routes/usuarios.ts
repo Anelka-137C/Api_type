@@ -1,5 +1,6 @@
 const {Router} = require('express');
-const  {usuariosGet,usuariosPut, usuariosPost,usuariosDelete} = require('../controllers/usuarios');
+import {check}from 'express-validator'
+import   {usuariosGet,usuariosPut, usuariosPost,usuariosDelete} from '../controllers/usuarios';
 
 const router = Router();
 
@@ -7,7 +8,9 @@ const router = Router();
 
   router.put('/:id',  usuariosPut);
 
-  router.post('/', usuariosPost );
+  router.post('/',[
+    check('correo', 'el correo no es valido').isEmail(),
+  ], usuariosPost );
 
   router.delete('/', usuariosDelete );
 

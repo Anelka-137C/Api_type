@@ -1,7 +1,11 @@
 import { Request, Response } from 'express';
 import  Usuario from '../models/uasuario';
+import bcryptjs from 'bcryptjs';
+import {validationResult}from 'express-validator'
 
-const usuariosGet = (req: Request, res: Response) => {
+
+
+export const usuariosGet = (req: Request, res: Response) => {
 
     const query = req.query;
     res.json({
@@ -10,7 +14,7 @@ const usuariosGet = (req: Request, res: Response) => {
     });  
 }
 
-const usuariosPut = (req: Request, res: Response) => {
+export const usuariosPut = (req: Request, res: Response) => {
 
     const id:string = req.params.id;
     res.json({
@@ -18,27 +22,44 @@ const usuariosPut = (req: Request, res: Response) => {
     });
 }
 
-const usuariosPost = (req: Request, res: Response) => {
+export const usuariosPost = async (req: Request, res: Response) => {
 
-    const {nombre,edad}:bodyPostRequest = req.body;
-    const usuario = new Usuario();
+    const errors = validationResult(req);
+    if(errors){
+        res.status(400).json(errors);
+        return;
+    }
+
+
+    const {nombre, correo,password,rol}:bodyPostRequest = req.body;
+    
+    const usuario = new Usuario({nombre, correo,password,rol});
+
+    //Verificar si el correo existe
+    const existeEmail = await Usuario.findOne({correo});
+    if(existeEmail){
+        res.status(400).json({
+            msg:'Este correo ya está registrado'
+        });
+
+        return;
+    }
+    //Encriptar la contraseña
+    const salt  = bcryptjs.genSaltSync(10);
+    usuario.password = bcryptjs.hashSync(<string>password,salt);
+
+    //Guardar en BD
+    await usuario.save();
 
     res.json({
-        msg: 'Metodo post de mi api controlador',
-        nombre,edad
+        usuario
     });  
 }
 
-const usuariosDelete = (_req: Request, res: Response) => {
+export const usuariosDelete = (_req: Request, res: Response) => {
     res.json({
         msg: 'Metodo delete de mi api controlador'
     });
 }
 
-module.exports = {
-    usuariosGet,
-    usuariosPut,
-    usuariosPost,
-    usuariosDelete
 
-}

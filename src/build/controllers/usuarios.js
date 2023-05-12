@@ -1,9 +1,21 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
 var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.usuariosDelete = exports.usuariosPost = exports.usuariosPut = exports.usuariosGet = void 0;
 const uasuario_1 = __importDefault(require("../models/uasuario"));
+const bcryptjs_1 = __importDefault(require("bcryptjs"));
+const express_validator_1 = require("express-validator");
 const usuariosGet = (req, res) => {
     const query = req.query;
     res.json({
@@ -11,28 +23,43 @@ const usuariosGet = (req, res) => {
         query
     });
 };
+exports.usuariosGet = usuariosGet;
 const usuariosPut = (req, res) => {
     const id = req.params.id;
     res.json({
         msg: 'Metodo put de mi api controlador', id
     });
 };
-const usuariosPost = (req, res) => {
-    const { nombre, edad } = req.body;
-    const usuario = new uasuario_1.default();
+exports.usuariosPut = usuariosPut;
+const usuariosPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const errors = (0, express_validator_1.validationResult)(req);
+    if (errors) {
+        res.status(400).json(errors);
+        return;
+    }
+    const { nombre, correo, password, rol } = req.body;
+    const usuario = new uasuario_1.default({ nombre, correo, password, rol });
+    //Verificar si el correo existe
+    const existeEmail = yield uasuario_1.default.findOne({ correo });
+    if (existeEmail) {
+        res.status(400).json({
+            msg: 'Este correo ya está registrado'
+        });
+        return;
+    }
+    //Encriptar la contraseña
+    const salt = bcryptjs_1.default.genSaltSync(10);
+    usuario.password = bcryptjs_1.default.hashSync(password, salt);
+    //Guardar en BD
+    yield usuario.save();
     res.json({
-        msg: 'Metodo post de mi api controlador',
-        nombre, edad
+        usuario
     });
-};
+});
+exports.usuariosPost = usuariosPost;
 const usuariosDelete = (_req, res) => {
     res.json({
         msg: 'Metodo delete de mi api controlador'
     });
 };
-module.exports = {
-    usuariosGet,
-    usuariosPut,
-    usuariosPost,
-    usuariosDelete
-};
+exports.usuariosDelete = usuariosDelete;

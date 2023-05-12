@@ -43,4 +43,4 @@ const UsuarioSchema:Schema = new Schema({
 
 
 
-export default model<Usuario>('Usuarios',UsuarioSchema);
+export default model<Usuario>('Usuarios',UsuarioSchema)
