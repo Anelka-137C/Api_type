@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.usuariosDelete = exports.usuariosPost = exports.usuariosPut = exports.usuariosGet = void 0;
 const uasuario_1 = __importDefault(require("../models/uasuario"));
 const bcryptjs_1 = __importDefault(require("bcryptjs"));
-const express_validator_1 = require("express-validator");
 const usuariosGet = (req, res) => {
     const query = req.query;
     res.json({
@@ -32,21 +31,8 @@ const usuariosPut = (req, res) => {
 };
 exports.usuariosPut = usuariosPut;
 const usuariosPost = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const errors = (0, express_validator_1.validationResult)(req);
-    if (errors) {
-        res.status(400).json(errors);
-        return;
-    }
     const { nombre, correo, password, rol } = req.body;
     const usuario = new uasuario_1.default({ nombre, correo, password, rol });
-    //Verificar si el correo existe
-    const existeEmail = yield uasuario_1.default.findOne({ correo });
-    if (existeEmail) {
-        res.status(400).json({
-            msg: 'Este correo ya está registrado'
-        });
-        return;
-    }
     //Encriptar la contraseña
     const salt = bcryptjs_1.default.genSaltSync(10);
     usuario.password = bcryptjs_1.default.hashSync(password, salt);
