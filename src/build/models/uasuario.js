@@ -17,6 +17,10 @@ const UsuarioSchema = new mongoose_1.Schema({
         type: String,
         required: [true, 'El nombre es obligatorio']
     },
+    estado: {
+        type: Boolean,
+        default: true
+    },
     correo: {
         type: String,
         required: [true, 'El correo es obligatorio'],

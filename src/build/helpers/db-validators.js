@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.emailExiste = exports.esRoleValido = void 0;
+exports.existeUsuarioPorId = exports.emailExiste = exports.esRoleValido = void 0;
 const role_1 = __importDefault(require("../models/role"));
 const uasuario_1 = __importDefault(require("../models/uasuario"));
 const esRoleValido = (rol = '') => __awaiter(void 0, void 0, void 0, function* () {
@@ -29,3 +29,10 @@ const emailExiste = (correo = '') => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.emailExiste = emailExiste;
+const existeUsuarioPorId = (id = '') => __awaiter(void 0, void 0, void 0, function* () {
+    const existeUsuario = yield uasuario_1.default.findById(id);
+    if (!existeUsuario) {
+        throw new Error(`El id no exise ${id}`);
+    }
+});
+exports.existeUsuarioPorId = existeUsuarioPorId;

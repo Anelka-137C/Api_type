@@ -1,4 +1,5 @@
-interface bodyPostRequest {
+interface bodyRequest {
+    _id:string,
     nombre:String,
     correo: String,
     password: string,

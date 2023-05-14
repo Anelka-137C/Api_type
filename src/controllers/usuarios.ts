@@ -2,31 +2,46 @@ import { Request, Response } from 'express';
 import  Usuario from '../models/uasuario';
 import bcryptjs from 'bcryptjs';
 
+export const usuariosGet = async (req: Request, res: Response) => {
 
+    const {limite=5,desde = 0} = req.query;
 
-export const usuariosGet = (req: Request, res: Response) => {
+    const [total, usuarios] = await Promise.all([
+        Usuario.countDocuments({estado:true}),
+        Usuario.find()
+        .skip(Number(desde))
+        .limit(Number(limite))
+    ]);
 
-    const query = req.query;
     res.json({
-        msg: 'Metodo get de mi api controlador',
-        query
+        total,
+        usuarios
     });  
 }
 
-export const usuariosPut = (req: Request, res: Response) => {
+export const usuariosPut = async (req: Request, res: Response) => {
 
     const id:string = req.params.id;
+    const {correo,_id,...newUser}:bodyRequest = req.body;
+    const {password}:bodyRequest = req.body;
+
+    //TODO: Validar contra base de datos
+
+    if(password){
+        const salt  = bcryptjs.genSaltSync(10);
+        newUser.password = bcryptjs.hashSync(<string>password,salt);
+    }
+
+    const usuario = await Usuario.findByIdAndUpdate(id,newUser);
+
     res.json({
-        msg: 'Metodo put de mi api controlador',id
+        msg: 'Metodo put de mi api controlador',id,usuario
     });
 }
 
 export const usuariosPost = async (req: Request, res: Response) => {
 
-    
-
-
-    const {nombre, correo,password,rol}:bodyPostRequest = req.body;
+    const {nombre, correo,password,rol}:bodyRequest = req.body;
     
     const usuario = new Usuario({nombre, correo,password,rol});
     
@@ -42,9 +57,13 @@ export const usuariosPost = async (req: Request, res: Response) => {
     });  
 }
 
-export const usuariosDelete = (_req: Request, res: Response) => {
+export const usuariosDelete = async (req: Request, res: Response) => {
+    const {id} = req.params;
+
+    const usuario = await Usuario.findByIdAndDelete(id);
+
     res.json({
-        msg: 'Metodo delete de mi api controlador'
+        usuario
     });
 }
 

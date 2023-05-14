@@ -14,3 +14,10 @@ export const esRoleValido = async (rol='') =>{
         throw new Error(`El correo ${correo} no esta registrado en la base de datos`);
     }
 }
+
+export const existeUsuarioPorId = async (id = '')=>{
+  const existeUsuario = await Usuario.findById(id);
+  if(!existeUsuario){
+      throw new Error(`El id no exise ${id}`);
+  }
+}
