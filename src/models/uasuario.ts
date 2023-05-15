@@ -3,6 +3,7 @@ import { Schema ,model} from "mongoose";
 
 interface Usuario {
     nombre:String,
+    estado:Boolean,
     correo: String,
     password: String,
     img: String,

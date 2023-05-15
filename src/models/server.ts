@@ -1,18 +1,20 @@
 const cors = require('cors');
-const express = require('express');
 require('dotenv').config();
 const {dbConnection} = require('../database/config');
+import express, { Express} from 'express';
 
 
 export class Server {
-    app: any;
+    app: Express
     port: string | undefined;
     usuariosPath: string;
+    authPath: string
 
     constructor (){
         this.app = express();
         this.port = process.env.PORT;
-        this.usuariosPath = '/api/usuarios'
+        this.usuariosPath = '/api/usuarios';
+        this.authPath = '/api/auth';
         //Conectar a base de datos
         this.conectarDb();
         //midlewares
@@ -35,6 +37,7 @@ export class Server {
 
     }
     routes():void{
+        this.app.use(this.authPath, require('../routes/auth'));
         this.app.use(this.usuariosPath, require('../routes/usuarios'));
     }
 

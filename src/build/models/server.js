@@ -8,17 +8,21 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Server = void 0;
 const cors = require('cors');
-const express = require('express');
 require('dotenv').config();
 const { dbConnection } = require('../database/config');
+const express_1 = __importDefault(require("express"));
 class Server {
     constructor() {
-        this.app = express();
+        this.app = (0, express_1.default)();
         this.port = process.env.PORT;
         this.usuariosPath = '/api/usuarios';
+        this.authPath = '/api/auth';
         //Conectar a base de datos
         this.conectarDb();
         //midlewares
@@ -35,9 +39,10 @@ class Server {
         // CORS 
         this.app.use(cors());
         //Parseo y lectura del body
-        this.app.use(express.json());
+        this.app.use(express_1.default.json());
     }
     routes() {
+        this.app.use(this.authPath, require('../routes/auth'));
         this.app.use(this.usuariosPath, require('../routes/usuarios'));
     }
     listen() {

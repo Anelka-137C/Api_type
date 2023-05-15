@@ -7,3 +7,8 @@ interface bodyRequest {
     rol: String
     google: Boolean
 }
+
+interface authRequest{
+    correo: string,
+    password: string
+}
