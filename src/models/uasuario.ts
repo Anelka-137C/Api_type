@@ -1,18 +1,37 @@
 import { Schema ,model} from "mongoose";
 
 
-interface Usuario {
+type Usuario   ={
+    __v:string,
+    _id:string,
+    uid:String,
     nombre:String,
-    estado:Boolean,
+    estado:boolean,
     correo: String,
     password: String,
     img: String,
-    rol: String
+    rol: string
     google: Boolean
 
 }
 
+type usuarioOut = {
+   
+    uid: String;
+    nombre: String;
+    estado: Boolean;
+    correo: String;
+    img: String;
+    rol: String;
+    google: Boolean;
+    
+}
+
 const UsuarioSchema:Schema = new Schema({
+    uid:{
+        type:String,
+        required:[false]
+    },
     nombre:{
         type: String,
         required: [true,'El nombre es obligatorio']
@@ -46,9 +65,10 @@ const UsuarioSchema:Schema = new Schema({
     }
 });
 
-UsuarioSchema.methods.toJSON= function(){
-    const {__v,password,...usuario} = this.toObject();
+UsuarioSchema.methods.toJSON= function():usuarioOut{
+    const {__v,password,_id,...usuario}:Usuario = this.toObject();
+    usuario.uid = _id;
     return usuario;
 }
 
-export default model<Usuario>('Usuarios',UsuarioSchema)
+export default model<Usuario >('Usuarios',UsuarioSchema);

@@ -25,7 +25,7 @@ exports.esRoleValido = esRoleValido;
 const emailExiste = (correo = '') => __awaiter(void 0, void 0, void 0, function* () {
     const existeEmail = yield uasuario_1.default.findOne({ correo });
     if (existeEmail) {
-        throw new Error(`El correo ${correo} no esta registrado en la base de datos`);
+        throw new Error(`El correo ${correo} esta registrado en la base de datos`);
     }
 });
 exports.emailExiste = emailExiste;

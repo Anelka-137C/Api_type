@@ -13,6 +13,10 @@ var __rest = (this && this.__rest) || function (s, e) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const UsuarioSchema = new mongoose_1.Schema({
+    uid: {
+        type: String,
+        required: [false]
+    },
     nombre: {
         type: String,
         required: [true, 'El nombre es obligatorio']
@@ -44,7 +48,8 @@ const UsuarioSchema = new mongoose_1.Schema({
     }
 });
 UsuarioSchema.methods.toJSON = function () {
-    const _a = this.toObject(), { __v, password } = _a, usuario = __rest(_a, ["__v", "password"]);
+    const _a = this.toObject(), { __v, password, _id } = _a, usuario = __rest(_a, ["__v", "password", "_id"]);
+    usuario.uid = _id;
     return usuario;
 };
 exports.default = (0, mongoose_1.model)('Usuarios', UsuarioSchema);

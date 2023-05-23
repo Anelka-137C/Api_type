@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import  Usuario from '../models/uasuario';
 import bcryptjs from 'bcryptjs';
+import { request } from '../helpers/types';
 
 export const usuariosGet = async (req: Request, res: Response) => {
 
@@ -57,13 +58,17 @@ export const usuariosPost = async (req: Request, res: Response) => {
     });  
 }
 
-export const usuariosDelete = async (req: Request, res: Response) => {
+export const usuariosDelete = async (req: request, res: Response) => {
     const {id} = req.params;
 
-    const usuario = await Usuario.findByIdAndDelete(id);
+
+    const usuario = await Usuario.findByIdAndUpdate(id,{estado:false});
+    const usuarioAutenticado = req.usuario;
+
 
     res.json({
-        usuario
+        usuario,
+        usuarioAutenticado
     });
 }
 

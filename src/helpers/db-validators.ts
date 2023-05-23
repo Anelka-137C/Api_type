@@ -11,7 +11,7 @@ export const esRoleValido = async (rol='') =>{
   export const emailExiste = async (correo = '')=>{
     const existeEmail = await Usuario.findOne({correo});
     if(existeEmail){
-        throw new Error(`El correo ${correo} no esta registrado en la base de datos`);
+        throw new Error(`El correo ${correo} esta registrado en la base de datos`);
     }
 }
 

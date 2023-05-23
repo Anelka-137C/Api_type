@@ -1,8 +1,8 @@
 const {Router} = require('express');
 import {check}from 'express-validator'
 import   {usuariosGet,usuariosPut, usuariosPost,usuariosDelete} from '../controllers/usuarios';
-import {validarCampos} from '../middlewares/validar-campos';
 import {esRoleValido,emailExiste,existeUsuarioPorId} from '../helpers/db-validators';
+import {validarCampos,validarJWT,esAdminRole,tieneRole} from '../middlewares';
 
 
 const router = Router();
@@ -22,14 +22,19 @@ const router = Router();
     check('correo', 'el correo no es valido').isEmail(),
     check('correo').custom(emailExiste),
     check('rol').custom(esRoleValido),
-    validarCampos
+    validarCampos,
+    validarJWT
   ], usuariosPost );
 
   router.delete('/:id',[
+    validarJWT,
+    esAdminRole,
+    tieneRole('ADMIN_ROLE', 'NOSE_ROLE'),
     check('id','No es un id valido').isMongoId(),
     check('id').custom(existeUsuarioPorId),
-    validarCampos
-  ], usuariosDelete );
+    validarCampos,
+    
+    ], usuariosDelete );
 
 
 module.exports = router;

@@ -70,9 +70,11 @@ const usuariosPost = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.usuariosPost = usuariosPost;
 const usuariosDelete = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { id } = req.params;
-    const usuario = yield uasuario_1.default.findByIdAndDelete(id);
+    const usuario = yield uasuario_1.default.findByIdAndUpdate(id, { estado: false });
+    const usuarioAutenticado = req.usuario;
     res.json({
-        usuario
+        usuario,
+        usuarioAutenticado
     });
 });
 exports.usuariosDelete = usuariosDelete;
