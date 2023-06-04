@@ -40,6 +40,8 @@ class Server {
         this.app.use(cors());
         //Parseo y lectura del body
         this.app.use(express_1.default.json());
+        // Directorio publico 
+        this.app.use(express_1.default.static('public'));
     }
     routes() {
         this.app.use(this.authPath, require('../routes/auth'));

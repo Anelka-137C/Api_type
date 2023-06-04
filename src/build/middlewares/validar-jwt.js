@@ -35,7 +35,7 @@ const validarJWT = (req, res, next) => __awaiter(void 0, void 0, void 0, functio
             return;
         }
         //Verificar si el uid tiene estado en true
-        if (usuario === null || usuario === void 0 ? void 0 : usuario.estado) {
+        if (!(usuario === null || usuario === void 0 ? void 0 : usuario.estado)) {
             res.status(401).json({
                 msg: 'Token no valido - Usuario con estado false'
             });

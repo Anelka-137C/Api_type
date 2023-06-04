@@ -23,7 +23,7 @@ export const usuariosGet = async (req: Request, res: Response) => {
 export const usuariosPut = async (req: Request, res: Response) => {
 
     const id:string = req.params.id;
-    const {correo,_id,...newUser}:bodyRequest = req.body;
+    const {_id,...newUser}:bodyRequest = req.body;
     const {password}:bodyRequest = req.body;
 
     //TODO: Validar contra base de datos

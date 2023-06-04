@@ -35,6 +35,9 @@ export class Server {
         //Parseo y lectura del body
         this.app.use(express.json());
 
+        // Directorio publico 
+        this.app.use(express.static('public')); 
+
     }
     routes():void{
         this.app.use(this.authPath, require('../routes/auth'));

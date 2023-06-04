@@ -42,7 +42,7 @@ const usuariosGet = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.usuariosGet = usuariosGet;
 const usuariosPut = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const id = req.params.id;
-    const _a = req.body, { correo, _id } = _a, newUser = __rest(_a, ["correo", "_id"]);
+    const _a = req.body, { _id } = _a, newUser = __rest(_a, ["_id"]);
     const { password } = req.body;
     //TODO: Validar contra base de datos
     if (password) {
