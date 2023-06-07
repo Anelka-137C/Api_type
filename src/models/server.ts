@@ -7,14 +7,20 @@ import express, { Express} from 'express';
 export class Server {
     app: Express
     port: string | undefined;
-    usuariosPath: string;
-    authPath: string
+    paths: { usuariosPath: string; authPath: string; categoriasPath:string };
+
 
     constructor (){
         this.app = express();
         this.port = process.env.PORT;
-        this.usuariosPath = '/api/usuarios';
-        this.authPath = '/api/auth';
+
+
+        this.paths={
+            usuariosPath: '/api/usuarios',
+            authPath : '/api/auth',
+            categoriasPath : '/api/categoria'
+
+        }
         //Conectar a base de datos
         this.conectarDb();
         //midlewares
@@ -40,8 +46,9 @@ export class Server {
 
     }
     routes():void{
-        this.app.use(this.authPath, require('../routes/auth'));
-        this.app.use(this.usuariosPath, require('../routes/usuarios'));
+        this.app.use(this.paths.authPath, require('../routes/auth'));
+        this.app.use(this.paths.usuariosPath, require('../routes/usuarios'));
+        this.app.use(this.paths.categoriasPath, require('../routes/categorias'));
     }
 
     listen():void{
